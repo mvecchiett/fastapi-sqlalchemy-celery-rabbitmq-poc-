@@ -1,6 +1,4 @@
-![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc/actions/workflows/ci.yml/badge.svg?branch=main)
-
-
+[![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml/badge.svg)](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml)
 
 # FastAPI POC — FastAPI + SQLAlchemy 2.0 + JWT + Celery + Redis + RabbitMQ
 
