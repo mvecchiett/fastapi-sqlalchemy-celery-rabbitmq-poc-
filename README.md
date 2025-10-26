@@ -1,4 +1,6 @@
-# Adviters Python POC — FastAPI + SQLAlchemy 2.0 + JWT + Celery + Redis + RabbitMQ + PostgreSQL
+![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc/actions/workflows/ci.yml/badge.svg)
+
+# FastAPI POC — FastAPI + SQLAlchemy 2.0 + JWT + Celery + Redis + RabbitMQ
 
 POC mínima para demostrar:
 - **API** en **FastAPI** con autenticación **OAuth2/JWT**.
@@ -53,6 +55,11 @@ Se configuran en `app/config.py` y `docker-compose.yml`:
 - `DATABASE_URL=postgresql+psycopg2://app:app@db:5432/app`
 - `REDIS_URL=redis://redis:6379/0`
 - `RABBIT_URL=amqp://guest:guest@rabbitmq:5672/`
+
+## Link rapidos
+- API docs: http://localhost:8000/docs
+- RabbitMQ UI: http://localhost:15672 (user/pass: guest / guest)
+
 
 ## Nota sobre seguridad
 Este POC es educativo. Para producción: manejo de secrets, HTTPS, rotación de claves, políticas CORS, hardening de contenedores, etc.
