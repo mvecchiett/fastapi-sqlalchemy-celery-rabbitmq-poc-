@@ -2,12 +2,13 @@
 
 # FastAPI POC — FastAPI + SQLAlchemy 2.0 + JWT + Celery + Redis + RabbitMQ
 
-POC mínima para demostrar:
-- **API** en **FastAPI** con autenticación **OAuth2/JWT**.
-- **SQLAlchemy 2.0 (Declarative)** con PostgreSQL.
-- **Tareas en segundo plano** con **Celery** usando **Redis** como broker/result.
-- **Publicación de evento** `user.created` en **RabbitMQ** al registrar usuario.
-- **GitLab CI** con lint básico y `pytest`.
+**Qué demuestra este POC**
+- API REST en **FastAPI** con **OAuth2/JWT**.
+- **SQLAlchemy 2.0** (declarative) + **PostgreSQL**.
+- **Celery** sobre **Redis** para tareas en segundo plano.
+- Publica `user.created` en **RabbitMQ**.
+- **Docker Compose** para levantar todo local.
+- **CI** con **GitHub Actions** (lint + tests).
 
 > Nota: Se usa PostgreSQL por simplicidad de stack. Cambiar a SQL Server es factible ajustando `DATABASE_URL` y dependencias (`pyodbc` + ODBC Driver), pero complejiza el contenedor. Para entrevista, este POC cubre patrones/piezas pedidas en el aviso.
 
