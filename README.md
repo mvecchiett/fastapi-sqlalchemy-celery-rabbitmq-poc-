@@ -1,6 +1,6 @@
 [![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml/badge.svg)](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml)
 
-FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
+#FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
 
 **Qué demuestra este POC**
 - API REST en **FastAPI** con **OAuth2/JWT**.
@@ -10,8 +10,8 @@ FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
 - **Docker Compose** para levantar todo local.
 - **CI** con **GitHub Actions** (lint + tests).
 
-> Nota: Se usa PostgreSQL por simplicidad de stack. Cambiar a SQL Server es factible ajustando `DATABASE_URL` y dependencias (`pyodbc` + ODBC Driver), pero complejiza el contenedor. Para entrevista, este POC cubre patrones/piezas pedidas en el aviso.
-
+> Nota: Se usa PostgreSQL por simplicidad de stack. Cambiar a SQL Server es factible ajustando `DATABASE_URL` y dependencias (`pyodbc` + ODBC Driver), pero complejiza el contenedor.
+> 
 ## Requisitos
 - Docker y Docker Compose.
 
