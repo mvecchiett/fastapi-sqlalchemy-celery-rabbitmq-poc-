@@ -1,0 +1,64 @@
+services:
+  api:
+    build: ./app
+    container_name: adviters_api
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://app:app@db:5432/app
+      - JWT_SECRET=devsupersecret
+      - JWT_ALG=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - REDIS_URL=redis://redis:6379/0
+      - RABBIT_URL=amqp://guest:guest@rabbitmq:5672/
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    working_dir: /code
+    volumes:
+      - ./app:/code
+
+  worker:
+    build: ./app
+    container_name: adviters_worker
+    depends_on:
+      - api
+      - redis
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://app:app@db:5432/app
+      - REDIS_URL=redis://redis:6379/0
+      - RABBIT_URL=amqp://guest:guest@rabbitmq:5672/
+    command: celery -A tasks.app worker --loglevel=INFO
+    working_dir: /code
+    volumes:
+      - ./app:/code
+
+  db:
+    image: postgres:16-alpine
+    container_name: adviters_db
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=app
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: adviters_redis
+    ports:
+      - "6379:6379"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: adviters_rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+volumes:
+  db_data:
