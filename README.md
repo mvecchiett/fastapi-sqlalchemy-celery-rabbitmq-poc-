@@ -1,6 +1,6 @@
 [![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml/badge.svg)](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml)
 
-##FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
+## FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
 
 **Qué demuestra este POC**
 - API REST en **FastAPI** con **OAuth2/JWT**.
