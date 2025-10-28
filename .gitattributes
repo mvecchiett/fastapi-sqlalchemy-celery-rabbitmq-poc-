@@ -1,1 +1,5 @@
 notes_private/fastapi-poc-instrucciones.md filter=gpg diff=gpg
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.sh     text eol=lf
