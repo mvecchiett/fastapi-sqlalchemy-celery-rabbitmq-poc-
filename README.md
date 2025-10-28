@@ -1,23 +1,19 @@
-![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml/badge.svg)](https://github.com/mvecchiett/fastapi-sqlalchemy-celery-rabbitmq-poc-/actions/workflows/ci.yml)
 
-# FastAPI POC — FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
+## FastAPI + SQLAlchemy 2.0 + JWT + Celery/Redis + RabbitMQ + Docker + CI
 
-POC corto para entrevistas. Demuestra API segura, tareas asíncronas, publicación de eventos y pipeline de CI, todo orquestado con Docker Compose.
-
-## Qué demuestra este POC
+**Qué demuestra este POC**
 - API REST en **FastAPI** con **OAuth2/JWT**.
 - **SQLAlchemy 2.0** (declarative) + **PostgreSQL**.
 - **Celery** sobre **Redis** para tareas en segundo plano.
-- Publica evento **`user.created`** en **RabbitMQ**.
+- Publica `user.created` en **RabbitMQ**.
 - **Docker Compose** para levantar todo local.
 - **CI** con **GitHub Actions** (lint + tests).
 
-## Enlaces rápidos
-- API Docs: <http://localhost:8000/docs>
-- RabbitMQ UI: <http://localhost:15672> (usuario/clave: `guest` / `guest`)
-
+> Nota: Se usa PostgreSQL por simplicidad de stack. Cambiar a SQL Server es factible ajustando `DATABASE_URL` y dependencias (`pyodbc` + ODBC Driver), pero complejiza el contenedor.
+> 
 ## Requisitos
-- **Docker** y **Docker Compose** instalados.
+- Docker y Docker Compose.
 
 ## Cómo ejecutar
 ```bash
@@ -26,60 +22,45 @@ docker compose up --build
 ```
 
 ## Smoke test rápido
-1. **Registrar usuario**
-    ```bash
-    curl -s -X POST http://localhost:8000/api/v1/auth/register       -H "Content-Type: application/json"       -d '{"email":"demo@example.com","password":"Secret123!"}'
-    ```
-2. **Obtener token**
-    ```bash
-    curl -s -X POST http://localhost:8000/api/v1/auth/token       -H "Content-Type: application/x-www-form-urlencoded"       -d "username=demo@example.com&password=Secret123!"
-    ```
-   Copiá el valor de `access_token` de la respuesta.
-3. **Consultar perfil (con token)**
-    ```bash
-    TOKEN=PEGAR_ACCESS_TOKEN_AQUI
-    curl -s http://localhost:8000/api/v1/users/me       -H "Authorization: Bearer $TOKEN"
-    ```
-
-## Estructura (resumen)
+1) **Registrar usuario**
+```bash
+curl -s -X POST http://localhost:8000/api/v1/auth/register -H "Content-Type: application/json" -d '{"email":"demo@example.com","password":"Secret123!"}'
 ```
-app/
-  main.py                 # FastAPI app
-  routers/
-    auth.py               # /auth/register, /auth/token
-    users.py              # /users/me
-  models.py               # SQLAlchemy models
-  schemas.py              # Pydantic models
-  database.py             # Engine/Session
-  config.py               # Settings (env vars)
-  auth_utils.py           # JWT helpers
-  deps.py                 # Depends (db, current_user)
-  tasks.py                # Celery task: send_welcome_email
-  messaging.py            # Publish event to RabbitMQ
-  requirements.txt
-  Dockerfile
-tests/
-  test_smoke.py           # sanity test
-.github/workflows/
-  ci.yml                  # CI (flake8 + pytest)
-docker-compose.yml
-requests.http             # Requests para VS Code REST Client
-README.md
+2) **Obtener token**
+```bash
+curl -s -X POST "http://localhost:8000/api/v1/auth/token" -H "Content-Type: application/x-www-form-urlencoded" -d "username=demo@example.com&password=Secret123!"
+```
+3) **Consultar perfil (con token)**
+```bash
+TOKEN=... # pegar access_token
+curl -s http://localhost:8000/api/v1/users/me -H "Authorization: Bearer $TOKEN"
 ```
 
-## Servicios y puertos
-- API (FastAPI): **http://localhost:8000**
-- DB (PostgreSQL): **localhost:5432**
-- Redis: **localhost:6379**
-- RabbitMQ (AMQP): **localhost:5672**
-- RabbitMQ UI: **http://localhost:15672** (guest/guest)
+## Estructura
+- `app/` código de la API.
+- `app/tasks.py` Celery (ejemplo de tarea `send_welcome_email`).
+- RabbitMQ recibe un mensaje `user.created` al registrarse.
+- `tests/` prueba simple con `pytest`.
+- `.gitlab-ci.yml` pipeline (lint + tests).
 
-## Notas
-- Se usa **PostgreSQL** por simplicidad del stack. Migrar a **SQL Server** es factible cambiando `DATABASE_URL` a `mssql+pyodbc` y agregando el driver ODBC en la imagen (idealmente via multi-stage).  
-- Para producción, usar **Alembic** para migraciones y endurecer configuración (secrets, CORS, retries, observabilidad).
+## Servicios
+- **API**: FastAPI (uvicorn) — http://localhost:8000
+- **DB**: PostgreSQL — puerto 5432
+- **Redis**: Broker/result Celery — puerto 6379
+- **RabbitMQ**: AMQP — puerto 5672; management en http://localhost:15672 (user: guest / pass: guest)
 
-## Roadmap breve
-- [ ] CRUD `accounts` con paginado/filtros.
-- [ ] Tests de integración (API + DB).
-- [ ] Observabilidad básica (OpenTelemetry).
-- [ ] Helm chart para despliegue en Kubernetes (opcional).
+---
+
+## Variables y valores por defecto
+Se configuran en `app/config.py` y `docker-compose.yml`:
+- `DATABASE_URL=postgresql+psycopg2://app:app@db:5432/app`
+- `REDIS_URL=redis://redis:6379/0`
+- `RABBIT_URL=amqp://guest:guest@rabbitmq:5672/`
+
+## Link rapidos
+- API docs: http://localhost:8000/docs
+- RabbitMQ UI: http://localhost:15672 (user/pass: guest / guest)
+
+
+## Nota sobre seguridad
+Este POC es educativo. Para producción: manejo de secrets, HTTPS, rotación de claves, políticas CORS, hardening de contenedores, etc.
